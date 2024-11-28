@@ -1,0 +1,8 @@
+INSERT INTO `student_info` VALUES (1,'Ellena Gilbert','Silkote','8900437789',18,'F'),
+(2,'Jinx','Zaun','8900435589',17,'F'),
+(3,'Silco','Piltover','8220437789',10,'M'),
+(4,'Jermy Gilbert','Mystic Falls','8900437789',11,'M'),
+(5,'Mikkel','Hawkins','7700437789',13,'M'),
+(6,'John Deo','Lousville','9100437789',14,'M'),
+(7,'Caroline Forbe','Hawkins','9000081123',15,'F'),
+(8,'Harry Potter','London','8666000043',9,'M');

@@ -1,0 +1,13 @@
+SELECT s.roll_no, s.full_name, s.address, s.phone, s.age, sc.course_id
+FROM student.student_info s
+JOIN student.student_course_info sc ON s.roll_no = sc.roll_no;
+
+SELECT sc.roll_no,s.full_name,sc.COURSE_ID 
+FROM student.student_info s
+LEFT JOIN student.student_course_info sc 
+ON sc.ROLL_NO = s.ROLL_NO;
+
+SELECT s.full_name,sc.COURSE_ID,s.roll_no 
+FROM student.student_info s
+RIGHT JOIN student.student_course_info sc 
+ON sc.ROLL_NO = s.ROLL_NO;

@@ -1,0 +1,5 @@
+Use employee;
+select * from salary where amount=(select Max(amount) from salary);
+
+select * from salary where amount = (select max(amount) from salary
+where amount < (select max(amount) from salary));

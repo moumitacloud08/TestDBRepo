@@ -1,0 +1,8 @@
+INSERT INTO `student_course_info` VALUES (1,1),
+(2,2),
+(2,3),
+(3,4),
+(1,5),
+(4,9),
+(5,10),
+(4,11);
