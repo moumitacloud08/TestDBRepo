@@ -19,6 +19,7 @@ EXPLAIN SELECT * FROM author_details WHERE author_email='justinbell@gmail.com';
 
 EXPLAIN SELECT * FROM  author_details FORCE INDEX(auth_email_ph) WHERE author_email='justinbell@gmail.com' AND author_phone=7090978781;
 
+use advanced_mysql;
 SELECT MIN(book_id) 
 FROM book_details 
 WHERE book_category='Sci-Fi';
