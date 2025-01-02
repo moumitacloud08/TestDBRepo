@@ -44,3 +44,24 @@ select * from setup_instruments where name like "statement/%" and enabled='NO';
 update setup_instruments set enabled="YES" where name like "statement/%";
 
 
+ALTER TABLE book_details
+DROP INDEX book_cat_publisher;
+
+
+
+
+CREATE INDEX book_cat_publisher ON book_details (book_category, publisher);
+
+CREATE INDEX book_publisher_cat ON book_details (publisher,book_category);
+
+ALTER TABLE book_details
+DROP INDEX book_publisher_cat;
+
+DROP INDEX book_cat_publisher ON book_details;
+
+SHOW INDEXES FROM book_details;
+
+CREATE INDEX book_cat_pub_bkname_year ON book_details (book_category, publisher, book_name, year_of_publishing); 
+
+
+
