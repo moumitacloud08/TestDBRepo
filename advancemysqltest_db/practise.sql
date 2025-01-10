@@ -1,23 +1,4 @@
-use advanced_mysql;
-EXPLAIN 
-SELECT bd.book_name, ad.author_name, cd.country_code 
-FROM country_details cd JOIN author_details ad 
-ON cd.country_name=ad.author_country 
-JOIN book_details bd 
-ON ad.author_name = bd.author_name 
-WHERE ad.author_name='Brittany Gray';
 
-
-CREATE INDEX auth_email ON author_details (author_email);
-CREATE INDEX auth_coun ON author_details (author_country);
-CREATE INDEX auth_email_ph ON author_details (author_email, author_phone);
-CREATE INDEX auth_ph_email ON author_details (author_phone,author_email);
-
-SHOW INDEXES FROM author_details;
-
-EXPLAIN SELECT * FROM author_details WHERE author_email='justinbell@gmail.com';
-
-EXPLAIN SELECT * FROM  author_details FORCE INDEX(auth_email_ph) WHERE author_email='justinbell@gmail.com' AND author_phone=7090978781;
 
 use advanced_mysql;
 SELECT MIN(book_id) 
@@ -43,20 +24,35 @@ select * from setup_instruments where name like "statement/%" and enabled='NO';
 
 update setup_instruments set enabled="YES" where name like "statement/%";
 
+-------- PRACTISE INDEX-------------
+
+
+use advanced_mysql;
+EXPLAIN 
+SELECT bd.book_name, ad.author_name, cd.country_code 
+FROM country_details cd JOIN author_details ad 
+ON cd.country_name=ad.author_country 
+JOIN book_details bd 
+ON ad.author_name = bd.author_name 
+WHERE ad.author_name='Brittany Gray';
+
+
+CREATE INDEX auth_email ON author_details (author_email);
+CREATE INDEX auth_coun ON author_details (author_country);
+CREATE INDEX auth_email_ph ON author_details (author_email, author_phone);
+CREATE INDEX auth_ph_email ON author_details (author_phone,author_email);
+
+SHOW INDEXES FROM author_details;
+
+EXPLAIN SELECT * FROM author_details WHERE author_email='justinbell@gmail.com';
+
+EXPLAIN SELECT * FROM  author_details FORCE INDEX(auth_email_ph) WHERE author_email='justinbell@gmail.com' AND author_phone=7090978781;
 
 ALTER TABLE book_details
 DROP INDEX book_cat_publisher;
 
 
-
-
-use advanced_mysql;
 SELECT book_name, year_of_publishing
-FROM book_details
-WHERE book_category='Sci-Fi'
-AND publisher='Pathfinder Press';
-
-EXPLAIN SELECT book_name, year_of_publishing
 FROM book_details
 WHERE book_category='Sci-Fi'
 AND publisher='Pathfinder Press';
@@ -104,13 +100,6 @@ CREATE INDEX book_cat_pub_year ON book_details (book_category, publisher, year_o
 CREATE INDEX book_year_pub_cat ON book_details (year_of_publishing, publisher, book_category);
 
 
-SELECT bd.book_name, ad.author_name, cd.country_code 
-FROM country_details cd JOIN author_details ad 
-ON cd.country_name=ad.author_country
-JOIN book_details bd 
-ON ad.author_name=bd.author_name
-WHERE ad.author_email='victoriabell@gmail.com';
-
 EXPLAIN  SELECT bd.book_name, ad.author_name, cd.country_code 
 FROM country_details cd JOIN author_details ad 
 ON cd.country_name=ad.author_country
@@ -127,5 +116,26 @@ CREATE INDEX auth_email ON author_details (author_email);
 CREATE INDEX bk_auth_name ON book_details (author_name);
 
 
+explain select count(author_name), author_country from author_details group by author_country;
 
+SHOW INDEXES FROM author_details;
 
+DROP INDEX auth_coun ON author_details;
+
+CREATE INDEX auth_coun ON author_details (author_country);
+
+explain select count(book_id), availability_status from book_meta_details where  unit_price > 300 GROUP BY availability_status;
+
+CREATE INDEX book_price_avail_status ON book_meta_details(availability_status,unit_price,book_id);
+
+CREATE INDEX book_price_avail_status ON book_meta_details(unit_price,availability_status,book_id);
+
+CREATE INDEX book_price_avail_status ON book_meta_details(book_id,unit_price,availability_status);
+
+CREATE INDEX book_price_avail_status ON book_meta_details(unit_price,availability_status);
+
+DROP INDEX book_price_avail_status ON book_meta_details;
+
+----------------------------------------------------------------------
+
+SHOW [FULL] PROCESSLIST;

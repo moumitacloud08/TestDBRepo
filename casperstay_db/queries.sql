@@ -91,5 +91,86 @@ desc casperstay_db.HOTEL_ROOM_DETAILS;
 desc casperstay_db.BOOKING;
 
 
+-- CURSOR EXCAMPLES
+DROP PROCEDURE IF EXISTS UPDATE_RATINGS;
+DELIMITER //
+CREATE PROCEDURE UPDATE_RATINGS()
+BEGIN
+    DECLARE v_booking_id INT(11);
+    DECLARE v_hotel_id INT(11);
+    DECLARE v_room_id INT(11);
+    DECLARE v_hotel_ratings_avg DECIMAL(2,1);
+    DECLARE v_booking_rating INT(11);
+    DECLARE counter INT(11);
+    DECLARE cursor1 CURSOR FOR SELECT BOOKING_ID, BOOKING_ROOM_ID, BOOKING_ROOM_RATING FROM BOOKING ORDER BY BOOKING_ID DESC;
+    SET counter = 1;
+    OPEN cursor1;
+    LABLE1:LOOP
+        FETCH cursor1 INTO v_booking_id, v_room_id, v_booking_rating;
+        SELECT HOTEL_ID INTO v_hotel_id FROM HOTEL_ROOM_DETAILS WHERE ROOM_ID = v_room_id;
+        SELECT HOTEL_RATINGS_AVG INTO v_hotel_ratings_avg FROM HOTEL WHERE HOTEL_ID = v_hotel_id;
+        SET v_hotel_ratings_avg = (v_hotel_ratings_avg + v_booking_rating)/2;
+        UPDATE HOTEL SET HOTEL_RATINGS_AVG = v_hotel_ratings_avg WHERE HOTEL_ID = v_hotel_id;
+        SET counter = counter + 1;
+        IF COUNTER = 4 THEN
+            LEAVE LABLE1;
+        END IF;
+     END LOOP;
+     CLOSE cursor1;
+END;
+//
+DELIMITER ;
+
+----PERFORM BCKUP -----
+
+mysqldump -u user1 -p --databases casperdtay_db > casperstay_db_backup.sql
+
+mysqldump -u user1 -p --databases casperstay_db --tables BOOKING > booking_table_backup.sql
+
+mysqldump -u user1 -p --databases casperstay_db --tables HOTEL HOTEL_ROOM_DETAILS > hotel_backup.sql
+
+mysqldump -u user1 -p --databases casperstay_db --tables USER --tab='backup' --fields-enclosed-by=','
+
+----DATA RECOVERY -----
+
+SOURCE casperstay_db_backup.sql
+
+LOAD DATA INFILE 'USER.txt' INTO TABLE USER FIELDS TERMINATED BY ',';
+
+----SECURITY-----
+
+GRANT SELECT,INSERT ON BOOKING to 'John';
+
+GRANT INSERT ON BOOKING to 'Mark';
+
+GRANT ALL ON BOOKING to 'Admin';
+
+REVOKE INSERT ON BOOKING FROM 'John';
+
+
+
+----INFORMATION SCHEMA--------
+
+USE INFORMATION_SCHEMA;
+
+SHOW TABLES;
+
+DESC INFORMATION_SCHEMA.TABLE_CONSTRAINTS;
+
+
+SELECT CONSTRAINT_NAME, CONSTRAINT_TYPE 
+FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS 
+WHERE TABLE_NAME='BOOKING' AND TABLE_SCHEMA='casperstay_db';
+
+
+
+
+
+
+
+
+
+
+
 
 
