@@ -136,6 +136,44 @@ CREATE INDEX book_price_avail_status ON book_meta_details(unit_price,availabilit
 
 DROP INDEX book_price_avail_status ON book_meta_details;
 
+
+
+
+
+
+use advanced_mysql;
+
+explain select count(author_name), author_country from author_details group by author_country;
+
+SHOW INDEXES FROM author_details;
+
+DROP INDEX auth_coun ON author_details;
+
+CREATE INDEX auth_coun ON author_details (author_country);
+
+explain select count(book_id), availability_status from book_meta_details where  unit_price > 300 GROUP BY availability_status;
+
+CREATE INDEX book_price_avail_status ON book_meta_details(availability_status,unit_price,book_id);
+
+CREATE INDEX book_price_avail_status ON book_meta_details(unit_price,availability_status,book_id);
+
+CREATE INDEX book_price_avail_status ON book_meta_details(book_id,unit_price,availability_status);
+
+CREATE INDEX book_price_avail_status ON book_meta_details(unit_price,availability_status);
+
+DROP INDEX book_price_avail_status ON book_meta_details;
+
+EXPLAIN select book_id,book_name,author_name FROM book_details WHERE book_category = 'Fantasy' AND publisher = 'Mandrake Press';
+EXPLAIN select book_id,book_name,author_name FROM book_details WHERE publisher = 'Mandrake Press';
+
+EXPLAIN select book_id,book_name,author_name FROM book_details WHERE book_category IS NOT NULL  AND publisher = 'Mandrake Press'; 
+
+CREATE INDEX book_cat_publisher ON book_details (book_category, publisher);
+DROP INDEX book_cat_publisher ON book_details;
+
+CREATE INDEX book_publisher_cat ON book_details (publisher,book_category);
+DROP INDEX book_publisher_cat ON book_details;
+
 ----------------------------------------------------------------------
 
 SHOW [FULL] PROCESSLIST;
