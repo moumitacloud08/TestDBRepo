@@ -176,4 +176,61 @@ DROP INDEX book_publisher_cat ON book_details;
 
 ----------------------------------------------------------------------
 
+CREATE TABLE SALE_DETAILS (book_id int , book_name VARCHAR(250), book_category VARCHAR(250), sale_date date
+-- FOREIGN KEY (book_id) REFERENCES book_details(book_id)
+);
+
+INSERT INTO SALE_DETAILS
+(
+BOOK_ID ,
+BOOK_NAME ,
+BOOK_CATEGORY ,
+SALE_DATE )
+VALUES(100015,'He general','Horror','2020-08-11');
+
+--------QUERY OPTIMIZATION---------------
+
+DESC book_details;
+DESC author_details;
+
+SHOW INDEXES FROM book_details;
+DROP INDEX bk_auth_name ON book_details;
+CREATE INDEX bk_auth_name ON book_details (author_name);
+
+SHOW INDEXES FROM author_details;
+DROP INDEX ak_auth_name ON author_details;
+CREATE INDEX ak_auth_name ON author_details (author_name);
+
+SELECT STRAIGHT_JOIN ad.author_email, ad.author_city, count(*) "NO_OF_BOOKS"
+FROM book_details bd JOIN author_details ad 
+ON bd.author_name = ad.author_name
+GROUP BY ad.author_email, ad.author_city;
+
+EXPLAIN 
+SELECT STRAIGHT_JOIN ad.author_email, ad.author_city, count(*) "NO_OF_BOOKS"
+FROM book_details bd JOIN author_details ad 
+ON bd.author_name = ad.author_name
+GROUP BY ad.author_email, ad.author_city;
+
+SELECT STRAIGHT_JOIN ad.author_email, ad.author_city, count(*) "NO_OF_BOOKS"
+FROM book_details bd JOIN author_details ad 
+ON bd.author_name = ad.author_name
+GROUP BY bd.author_name;
+
+EXPLAIN 
+SELECT STRAIGHT_JOIN ad.author_email, ad.author_city, count(*) "NO_OF_BOOKS"
+FROM book_details bd JOIN author_details ad 
+ON bd.author_name = ad.author_name
+GROUP BY bd.author_name;
+
+EXPLAIN 
+SELECT STRAIGHT_JOIN ad.author_email, ad.author_city, count(*) "NO_OF_BOOKS"
+FROM book_details bd JOIN author_details ad 
+ON bd.author_name = ad.author_name
+GROUP BY ad.author_name;
+
+
+
+---
+
 SHOW [FULL] PROCESSLIST;
